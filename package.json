@@ -2,10 +2,14 @@
   "name": "crud-api",
   "version": "1.0.0",
   "description": "CRUD-API  The Rolling Scopes School task",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx nodemon",
+    "build": "rimraf ./build && npx tsc",
+    "start": "npm run build && node build/server",
+    "lint": "npx eslint ./src",
+    "format": "npx eslint ./src --fix"
   },
   "repository": {
     "type": "git",
@@ -20,7 +24,12 @@
   "homepage": "https://github.com/flyether/CRUD-API#readme",
   "devDependencies": {
     "@types/node": "^18.11.14",
+    "@types/uuid": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "eslint": "^8.29.0",
     "nodemon": "^2.0.20",
+    "prettier": "^2.8.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   },
@@ -39,6 +48,7 @@
     "create-require": "^1.1.1",
     "debug": "^3.2.7",
     "diff": "^4.0.2",
+    "dotenv": "^16.0.3",
     "fill-range": "^7.0.1",
     "glob-parent": "^5.1.2",
     "has-flag": "^3.0.0",
@@ -61,6 +71,7 @@
     "to-regex-range": "^5.0.1",
     "touch": "^3.1.0",
     "undefsafe": "^2.0.5",
+    "uuid": "^9.0.0",
     "v8-compile-cache-lib": "^3.0.1",
     "yn": "^3.1.1"
   }
