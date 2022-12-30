@@ -7,7 +7,7 @@ import { getUsers } from './methods/get.js';
 import { getById } from './methods/getById.js';
 
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT as unknown as number;
 
 export const server = http.createServer();
 server.on('request', (req, res) => {
