@@ -1,22 +1,40 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { bd } from '../users/bd.js';
+import { validate } from 'uuid';
+
+export const getById = (req: IncomingMessage, res: ServerResponse, id: string) => {
+  try {
+    if (validate(id)) {
+      const index = bd.findIndex((t) => t.id === id);
+
+      const userId = index !== -1 ? bd[index] : null;
+
+      if (userId) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(bd[index]));
+      } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end("userId doesn't exist");
+      }
+    } else {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      res.end('userId is invalid');
+    }
+  } catch {
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('Something went wrong');
+  }
+};
+
+//  with JSON
 // import path from 'node:path';
+// import { IncomingMessage, ServerResponse } from 'http';
 // import * as fs from 'node:fs';
 // import { fileURLToPath } from 'url';
 // import { IUser } from '../models/interface.js';
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirnameUser = path.dirname(path.dirname(__filename));
 // const usersStore = path.resolve(__dirnameUser, 'users/users.json');
-
-export const getById = (req: IncomingMessage, res: ServerResponse, id: string) => {
-      const index = bd.findIndex((t) => t.id === id);
-      res.end(
-        JSON.stringify(
-           bd[index],
-        ),
-      );
-    }
-
 // export const getById = (req: IncomingMessage, res: ServerResponse, id: string) => {
 //   fs.readFile(usersStore, 'utf8', (err, data) => {
 //     if (err) {

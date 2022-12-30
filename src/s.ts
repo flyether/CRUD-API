@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+
 import * as http from 'http';
 import { deleteUser } from './methods/delete.js';
 import { postUser } from './methods/post.js';
@@ -6,11 +6,10 @@ import { putUser } from './methods/put.js';
 import { getUsers } from './methods/get.js';
 import { getById } from './methods/getById.js';
 
-dotenv.config();
-const PORT = process.env.PORT;
 
-export const server = http.createServer();
-server.on('request', (req, res) => {
+
+export const router = (req: http.IncomingMessage, res: http.ServerResponse) => {
+
   
   console.log("request", ":" + req.headers.host, req.method, req.url);
   if ((req.method == 'GET' && req.url == '/api/users' ||req.method == 'GET' && req.url == '/api/users/' )) {
@@ -37,8 +36,8 @@ server.on('request', (req, res) => {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Page not found');
   }
-});
+};
 
 
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
 

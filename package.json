@@ -5,9 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "npx nodemon",
-    "build": "rimraf ./build && npx tsc",
-    "start": "npm run build && node build/server",
+    "start:dev": "npx nodemon",
+    "build": " npm run lint && tsc -p tsconfig.json",
+    "start:prod": "npm run build && node build/server",
+    "start:multi": "npm run build && node build/multi.js",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix"
   },
