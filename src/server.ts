@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import * as http from 'http';
-import { deleteUser } from './methods/delete.js';
-import { postUser } from './methods/post.js';
-import { putUser } from './methods/put.js';
-import { getUsers } from './methods/get.js';
-import { getById } from './methods/getById.js';
+import { deleteUser } from './methods/delete';
+import { postUser } from './methods/post';
+import { putUser } from './methods/put';
+import { getUsers } from './methods/get';
+import { getById } from './methods/getById';
 
 dotenv.config();
 const PORT = process.env.PORT as unknown as number;

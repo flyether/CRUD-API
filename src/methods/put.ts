@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { bd } from '../users/bd.js';
+import { bd } from '../users/bd';
 import { validate } from 'uuid';
 
 export const putUser = (req: IncomingMessage, res: ServerResponse, id: string) => {

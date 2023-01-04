@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { bd } from '../users/bd.js';
+import { bd } from '../users/bd';
 
 export const getUsers = (req: IncomingMessage, res: ServerResponse) => {
   try {

@@ -1,3 +1,3 @@
-import { IUser } from "../models/interface.js";
+import { IUser } from "../models/interface";
 
 export const bd: IUser[] = []

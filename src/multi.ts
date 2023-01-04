@@ -2,7 +2,7 @@ import cluster from 'cluster';
 import { cpus } from 'os';
 import * as dotenv from 'dotenv';
 import { createServer, request } from 'node:http';
-import { router } from './router.js';
+import { router } from './router';
 
 dotenv.config();
 
