@@ -21,7 +21,7 @@ server.on('request', (req, res) => {
     return getById(req, res, id);
   } 
   else if (req.method == 'POST' && req.url == '/api/users'|| req.method == 'POST' && req.url === '/api/users/') {
-  
+    console.log("request", ":" + req.headers.host, req.method, req.url);
     return postUser(req, res);
   }
   
