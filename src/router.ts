@@ -1,4 +1,3 @@
-
 import * as http from 'http';
 import { deleteUser } from './methods/delete';
 import { postUser } from './methods/post';
@@ -11,8 +10,7 @@ import { getById } from './methods/getById';
 
 export const router = (req: http.IncomingMessage, res: http.ServerResponse) => {
 
-  
-  console.log("request", ":" + req.headers.host, req.method, req.url);
+  console.log( "request", ":" + req.headers.host, req.method, req.url);
   if ((req.method == 'GET' && req.url == '/api/users' ||req.method == 'GET' && req.url == '/api/users/' )) {
     return getUsers(req, res);
   } 
@@ -21,15 +19,17 @@ export const router = (req: http.IncomingMessage, res: http.ServerResponse) => {
     return getById(req, res, id);
   } 
   else if (req.method == 'POST' && req.url == '/api/users'|| req.method == 'POST' && req.url === '/api/users/') {
-  
+    console.log( "request", ":" + req.headers.host, req.method, req.url)
     return postUser(req, res);
   }
   
   else if (req.method == 'PUT' && req.url?.match(/\/api\/users\/[a-zA-Z0-9]{1,}/)) {
+    console.log( "request", ":" + req.headers.host, req.method, req.url)
     const id = req.url.split('/')[3];
     return putUser(req, res, id);
   } 
    else if (req.method == 'DELETE' && req.url?.match(/\/api\/users\/[a-zA-Z0-9]{1,}/)) {
+    console.log( "request", ":" + req.headers.host, req.method, req.url)
     const id = req.url.split('/')[3];
     return deleteUser(req, res, id);
   } 
