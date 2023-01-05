@@ -9,7 +9,7 @@
     "start:dev": "npx nodemon",
     "build": " npm run lint && webpack --mode=production",
     "start:prod": "webpack && node dist/bundle.js",
-    "start:multi": "npm run lint && ts-node --esm src/multi.ts",
+    "start:multi": "npm run lint && ts-node --esm src/multi2.ts",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix"
   },

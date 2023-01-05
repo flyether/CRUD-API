@@ -1,11 +1,11 @@
 import * as http from 'http';
-import { deleteUser } from './methods/delete';
-import { postUser } from './methods/post';
-import { putUser } from './methods/put';
-import { getUsers } from './methods/get';
-import { getById } from './methods/getById';
+// import { deleteUser } from './methods/delete';
+// import { postUser } from './methods/post';
+// import { putUser } from './methods/put';
+// import { getUsers } from './methods/get';
+// import { getById } from './methods/getById';
 
-
+import { deleteUser, postUser, putUser, getUsers, getById } from './methods/multiMethod';
 
 
 export const router = (req: http.IncomingMessage, res: http.ServerResponse) => {
