@@ -12,7 +12,9 @@ export const putUser = (req: IncomingMessage, res: ServerResponse, id: string) =
       });
 
       req.on('end', () => {
-        const user = JSON.parse(data);
+
+        try {
+          const user = JSON.parse(data);
 
         const index = bd.findIndex((t) => t.id === id);
         const userId = index !== -1 ? bd[index] : null;
@@ -30,6 +32,13 @@ export const putUser = (req: IncomingMessage, res: ServerResponse, id: string) =
           res.writeHead(404, { 'Content-Type': 'text/plain' });
           res.end("userId doesn't exist");
         }
+
+      } catch (error) {
+        // Обработка ошибки, возникшей при парсинге JSON
+        console.error(error);
+        res.writeHead(400, { 'Content-Type': 'text/plain' });
+        res.end('Invalid JSON');
+      }
       });
     } else {
       res.writeHead(400, { 'Content-Type': 'text/plain' });

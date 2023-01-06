@@ -9,7 +9,9 @@ export const postUser = async (req: IncomingMessage, res: ServerResponse) => {
       data += chunk.toString();
     });
     req.on('end', () => {
-      const user = JSON.parse(data);
+      
+      try {
+        const user = JSON.parse(data);
       if (
         !user.age ||
         !user.username ||
@@ -28,6 +30,12 @@ export const postUser = async (req: IncomingMessage, res: ServerResponse) => {
         res.writeHead(201, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(user));
       }
+    } catch (error) {
+     
+      console.error(error);
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      res.end('Invalid JSON');
+    }
     });
   } catch {
     res.writeHead(500, { 'Content-Type': 'text/plain' });

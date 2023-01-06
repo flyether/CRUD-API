@@ -42,3 +42,7 @@ server.on('request', (req, res) => {
 
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
+process.on('SIGINT', () =>{
+  console.log( "остановка сервера");
+  process.exit();
+})
