@@ -23,6 +23,10 @@ if (cluster.isPrimary) {
     };
 
     const redirectReq = request(redirectOptions, (redirectRes) => {
+      Object.entries(redirectRes.headers).forEach(([headerName, headerValue]) => {
+        // Добавляем каждый заголовок в ответ
+        res.setHeader(headerName, (headerValue as string | string[]));
+      });
       redirectRes.pipe(res);
     });
     req.pipe(redirectReq);
@@ -79,11 +83,14 @@ if (cluster.isPrimary) {
   });
 
   server.listen(process.env.PORT);
+  
 } else {
   const port = process.env.PORT;
   const server = createServer();
 
   server.on('request', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    
     if ((req.method == 'GET' && req.url == '/api/users') || (req.method == 'GET' && req.url == '/api/users/')) {
       try {
         console.log('request', ':' + req.headers.host, req.method, req.url);
@@ -96,7 +103,7 @@ if (cluster.isPrimary) {
         });
       } catch {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end('Something went wrong');
+        res.end( 'Something went wrong');
       }
     } else if (req.method == 'GET' && req.url?.match(/\/api\/users\/[a-zA-Z0-9]{1,}/)) {
       const id = req.url.split('/')[3];

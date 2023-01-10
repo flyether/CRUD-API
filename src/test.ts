@@ -1,152 +1,79 @@
-import * as dotenv from 'dotenv';
-import {  request } from 'node:http';
-import * as http from 'http';
+import request from 'supertest';
+import { IUser } from './models/interface';
+import { bd } from './users/bd';
+import { server } from './server';
 
 
+let userId: string | number | undefined ;
 
-dotenv.config();
-const PORT = process.env.PORT as unknown as number;
+const newUser: IUser = {
+  age: 30,
+  username: 'Sasha',
+  hobbies: ['basketball', 'music'],
+};
 
-test('Get a single user by ID', () => {
-  const userId = '123';
-  const expectedResponse = {
-    id: '123',
-    name: 'Hey man',
-    age: 220,
-  };
-
-  request(
-    {
-      hostname: 'localhost',
-      port: PORT,
-      path: `/api/users/${userId}`,
-      method: 'GET',
-    },
-    (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      res.on('end', () => {
-        const response = JSON.parse(data);
-        expect(response).toEqual(expectedResponse);
-      });
-    }
-  );
+afterEach((done) => {
+  server.close();
+  done();
 });
 
-test('Create a new user', () => {
-  const newUser = {
-    name: 'Jane Doe',
-    age: 25,
-  };
-  const expectedResponse = {
-    id: expect.any(String),
-    name: 'Jane Doe',
-    age: 25,
-  };
-
-  request(
-    {
-      hostname: 'localhost',
-      port: PORT,
-      path: '/api/users',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-    (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      res.on('end', () => {
-        const response = JSON.parse(data);
-        expect(response).toEqual(expectedResponse);
-      });
-    }
-  ).end(JSON.stringify(newUser));
-});
-
-
-function startServer(): http.Server {
-  const server = http.createServer();
-  server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-  return server;
-}
-
-describe('PUT api/users/{userId}', () => {
-  let server: http.Server;
+describe('api methods', () => {
   
-
-  beforeEach(() => {
-    server = startServer();
+  it('should return a list of users', async () => {
+    const response = await request(server).get('/api/users/');
+    expect(response.status).toEqual(200);
+    expect(response.type).toEqual('application/json');
+    expect(response.body).toEqual(bd);
   });
 
-  afterEach(() => {
-    server.close();
+  it('should create a new user', async () => {
+    const response = await request(server)
+      .post('/api/users')
+      .send(newUser)
+      .set('Content-Type', 'application/json');
+    expect(response.status).toEqual(201);
+    expect(response.body).toEqual({ id: expect.any(String), ...newUser });
+     userId =response.body.id ;
+     console.log(userId , "41")
   });
 
-  it('should update an existing user', () => {
-    const userId = '123';
-    const updatedUser = {
-      name: 'Dick from the mountain',
-      age: 31,
+  it('It should return the correct user when the id is valid', async () => {
+    const response = await request(server).get(`/api/users/${userId}`);
+    console.log(userId , "52")
+    const index = bd.findIndex((t) => t.id === userId);
+    expect(response.status).toEqual(200);
+    expect(response.type).toEqual('application/json');
+    expect(response.body).toEqual(bd[index]);
+  });
+
+  it('should update a user with a PUT request', async () => {
+    const updatedUser: IUser = {
+      age: 35,
+      username: 'Masha',
+      hobbies: ['basketball', 'music', 'reading']
     };
-    const expectedResponse = {
-      id: '123',
-      name: 'Dick from the mountain',
-      age: 31,
-    };
-
-    request(
-      {
-        hostname: 'localhost',
-        port: PORT,
-        path: `/api/users/${userId}`,
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          const response = JSON.parse(data);
-          expect(response).toEqual(expectedResponse);
-        });
-      }
-    ).end(JSON.stringify(updatedUser));
+    const response = await request(server)
+      .put(`/api/users/${userId}`)
+      .send(updatedUser)
+      .set('Content-Type', 'application/json');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ id: userId, ...updatedUser });
   });
-
-  it('should delete an existing user', () => {
-    const userId = '123';
-    const expectedResponse = 'User 123 deleted successfully';
-
-    request(
-      {
-        hostname: 'localhost',
-        port: PORT,
-        path: `/api/users/${userId}`,
-        method: 'DELETE',
-      },
-      (res) => {
-        let data = '';
-        res.on('data', (chunk) => {
-          data += chunk;
-        });
-        res.on('end', () => {
-          expect(data).toEqual(expectedResponse);
-        });
-      }
-    );
+  
+  it('should delete a user with a DELETE request', async () => {
+    const response = await request(server).delete(`/api/users/${userId}`);
+    expect(response.status).toEqual(204);
+  });
+  
+  it('should return 404 when getting a deleted user with a GET request', async () => {
+    const response = await request(server).get(`/api/users/${userId}`);
+    expect(response.status).toEqual(404);
   });
 
 });
+
+
+
+
+
 
