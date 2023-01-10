@@ -1,7 +1,5 @@
 # CRUD-API
 CRUD-API  The Rolling Scopes School task
-# CRUD-API
-CRUD-API  The Rolling Scopes School task
 
 https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md
 Task implemented on Typescript
