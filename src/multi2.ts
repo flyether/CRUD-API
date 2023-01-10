@@ -23,10 +23,13 @@ if (cluster.isPrimary) {
     };
 
     const redirectReq = request(redirectOptions, (redirectRes) => {
-      Object.entries(redirectRes.headers).forEach(([headerName, headerValue]) => {
-        // Добавляем каждый заголовок в ответ
-        res.setHeader(headerName, (headerValue as string | string[]));
+      if(redirectRes.statusCode) {
+        res.statusCode = redirectRes.statusCode
+    }
+      Object.entries(redirectRes.headers).forEach(([headerName, headerValue, ]) => {
+        res.setHeader(headerName, headerValue as string | string[]);
       });
+
       redirectRes.pipe(res);
     });
     req.pipe(redirectReq);
@@ -70,7 +73,17 @@ if (cluster.isPrimary) {
             age: msg.userFromPUT.age || bd[index].age,
             hobbies: msg.userFromPUT.hobbies || bd[index].hobbies,
           };
-          worker.send(bd[index]);
+          if (
+            typeof bd[index].username != 'string' ||
+            typeof bd[index].age != 'number' ||
+            Array.isArray(bd[index].hobbies) != true
+          ) {
+            worker.send(
+              'age(number) and username(string) and hobbies(array) are required fields with specific data types',
+            );
+          } else {
+            worker.send(bd[index]);
+          }
         } else {
           worker.send('not');
         }
@@ -83,14 +96,13 @@ if (cluster.isPrimary) {
   });
 
   server.listen(process.env.PORT);
-  
 } else {
   const port = process.env.PORT;
   const server = createServer();
 
   server.on('request', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    
+
     if ((req.method == 'GET' && req.url == '/api/users') || (req.method == 'GET' && req.url == '/api/users/')) {
       try {
         console.log('request', ':' + req.headers.host, req.method, req.url);
@@ -103,7 +115,7 @@ if (cluster.isPrimary) {
         });
       } catch {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
-        res.end( 'Something went wrong');
+        res.end('Something went wrong');
       }
     } else if (req.method == 'GET' && req.url?.match(/\/api\/users\/[a-zA-Z0-9]{1,}/)) {
       const id = req.url.split('/')[3];
@@ -193,12 +205,17 @@ if (cluster.isPrimary) {
                 process.send({ msgFromWorker: 'PUT', userFromPUT: user, idFromPUT: id });
               }
               process.once('message', (message: IUser | string) => {
-                if (message != 'not') {
+                if (typeof message != 'string') {
                   res.writeHead(200, { 'Content-Type': 'application/json' });
                   res.end(JSON.stringify(message));
-                } else {
+                } else if (message === 'not') {
                   res.writeHead(404, { 'Content-Type': 'text/plain' });
                   res.end("userId doesn't exist");
+                } else {
+                  res.writeHead(400, { 'Content-Type': 'text/plain' });
+                  res.end(
+                    'age(number) and username(string) and hobbies(array) are required fields with specific data types',
+                  );
                 }
               });
             } catch (error) {

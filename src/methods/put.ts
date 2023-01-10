@@ -26,8 +26,17 @@ export const putUser = (req: IncomingMessage, res: ServerResponse, id: string) =
             age: user.age || bd[index].age,
             hobbies: user.hobbies || bd[index].hobbies,
           };
+          if (
+            typeof  bd[index].username != 'string' ||
+            typeof  bd[index].age != 'number' ||
+            Array.isArray( bd[index].hobbies) !=  true
+          ) {
+            res.writeHead(400, { 'Content-Type': 'text/plain' });
+            res.end('age(number) and username(string) and hobbies(array) are required fields with specific data types');
+          } else {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(bd[index]));
+          }
         } else {
           res.writeHead(404, { 'Content-Type': 'text/plain' });
           res.end("userId doesn't exist");
