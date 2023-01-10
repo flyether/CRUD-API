@@ -20,7 +20,7 @@ development mode
 
 npm run start:dev
 
-development mode
+production mode
 
 npm run start:prod
 
