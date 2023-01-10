@@ -1,11 +1,3 @@
-# CRUD-API
-CRUD-API  The Rolling Scopes School task
-
-https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md
-Task implemented on Typescript
-Done 2023-01-10/ deadline 2023-01-17
-
-Score: 202/ 202
 
 To run the application:
 

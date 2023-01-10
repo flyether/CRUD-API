@@ -23,10 +23,10 @@ if (cluster.isPrimary) {
     };
 
     const redirectReq = request(redirectOptions, (redirectRes) => {
-      if(redirectRes.statusCode) {
-        res.statusCode = redirectRes.statusCode
-    }
-      Object.entries(redirectRes.headers).forEach(([headerName, headerValue, ]) => {
+      if (redirectRes.statusCode) {
+        res.statusCode = redirectRes.statusCode;
+      }
+      Object.entries(redirectRes.headers).forEach(([headerName, headerValue]) => {
         res.setHeader(headerName, headerValue as string | string[]);
       });
 
@@ -95,7 +95,7 @@ if (cluster.isPrimary) {
     console.log('Worker ' + worker.pid + ' died.');
   });
 
-  server.listen(process.env.PORT);
+  server.listen(process.env.PORT, () => console.log(`Primary server is running on port ${process.env.PORT}`));
 } else {
   const port = process.env.PORT;
   const server = createServer();
@@ -177,7 +177,6 @@ if (cluster.isPrimary) {
               res.end(JSON.stringify(user));
             }
           } catch (error) {
-            // Обработка ошибки, возникшей при парсинге JSON
             console.error(error);
             res.writeHead(400, { 'Content-Type': 'text/plain' });
             res.end('Invalid JSON');
@@ -269,6 +268,5 @@ if (cluster.isPrimary) {
   console.log(`Worker ${process.pid} started`);
 }
 process.on('SIGINT', () => {
-  console.log('остановка сервера');
   process.exit();
 });
