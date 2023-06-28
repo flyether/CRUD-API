@@ -10,6 +10,7 @@
     "build": " npm run lint && webpack --mode=production",
     "start:prod": "webpack && node dist/bundle.js",
     "start:multi": "npm run lint && ts-node --esm src/multi2.ts",
+    "start:multi1": "npm run lint && ts-node --esm src/server.ts --condition=multi",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix"
   },
